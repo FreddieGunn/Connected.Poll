@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+<main role="main" class="text-center mt-4">
+    <h1 class="text-center mb-5">{{ErrorTitle}}</h1>
+    {% if link %}
+    <p class="text-center">You can submit a response to this poll <a href="{{url_for('view_poll', poll_id = poll_id)}}">Here</a></p>
+    {% endif %}
+</main>
+{% endblock %}

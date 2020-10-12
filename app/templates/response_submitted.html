@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block app_content %}
+<main role="main" class="text-center mt-4">
+    <h1>You have succesfully submitted your response to this poll</h1>
+    <a href="{{url_for('search_polls')}}">View available polls</a>
+    <a href="{{url_for('create_poll')}}">Create your own</a>
+</main>
+
+{% endblock %}

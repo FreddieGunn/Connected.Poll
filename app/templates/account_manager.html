@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+<main role="main">
+    <h6>User: {{user.username}}</h6>
+    <a href="{{url_for('delete_account', user_id=user.id)}}">Delete This account</a>
+<table style="width:100%">
+    <tr>
+        <th>Poll ID</th>
+        <th>Poll Title</th>
+        <th>Public</th>
+        <th>Online</th>
+        <th>Delete?</th>
+    </tr>
+    {% for poll in user.polls %}
+    <tr>
+        <td>poll.id</td>
+        <td>poll.title</td>
+        {% if poll.public %}
+        <td>Yes</td>
+        {% else %}
+        <td>No</td>
+        {% endif %}
+
+        {% if poll.online %}
+        <td>Yes</td>
+        {% else %}
+        <td>No</td>
+        {% endif %}
+        <td><a href="{{url_for('delete_poll', poll_id = poll.id)}}">Delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+</main>
+{% endblock %}

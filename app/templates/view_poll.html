@@ -1,0 +1,119 @@
+{% if page != "preview" %}
+{% extends "base.html" %}
+{% endif %}
+
+{% import 'bootstrap/form.html' as wtf %}
+
+{% if page != "preview" %}
+{% block scripts %}
+{{super()}}
+<script src="{{ url_for('static', filename='js/response_form.js') }}"></script>
+{% endblock %}
+{% endif %}
+
+{% block app_content %}
+<main role="main" class="mt-4 {{ 'border-top' if page== 'preview'}}">
+    <form name="response_form" id="response-form" action="" method="post" role="form">
+
+        <div id="errorModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Error</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body row mx-2">
+                        <div id="error-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirmModal" class="modal fade" tabindex="-1" role="form" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Are you sure?</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Yes</button>
+                            <button type="button" class="btn btn-dark" data-dismiss="modal"
+                                    aria-hidden="true">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <h1 class="display-4 mb-5 text-center">{{poll.title}}</h1>
+        {% if message %}
+            <h5 class="text-center mb-5">{{message}}</h5>
+        {% endif %}
+        <div class="row justify-content-center">
+            {% for question in poll.questions %}
+            <div class="col-lg-10 card mx-2 mb-4 bg-light" id="question-{{loop.index0}}">
+                <div class="answer card-body">
+                    <div class = "questionTitle mb-4 border-bottom">
+                        <h4 class="display-5">{{loop.index}}. {{question.question_title }}</h4>
+                    </div>
+
+                    {% set parent = loop.index0 %}
+                    {% if question.type == "radioField" %}
+                    <div class="radio-group">
+                        {% for answer in question.answers %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input type="radio" id="{{answer.id}}" name="question-{{parent}}-answer"
+                                           value="{{answer.id}}" required>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control response-label" value="{{answer.answer}}" readonly>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% elif question.type == "textField" %}
+                    <div class="form-group">
+                        <input id="question-{{parent}}-answer" class="form-control" name="question-{{parent}}-answer"
+                               type="text" placeholder="Response" required>
+                    </div>
+
+                    {% elif question.type == "checkField" %}
+                    <div>
+                        {% for answer in question.answers %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input type="checkbox" id="question-{{parent}}-answer-{{loop.index0}}"
+                                           name="question-{{parent}}-answer-{{loop.index0}}" value="{{answer.id}}">
+                                </div>
+                            </div>
+                            <input type="text" class="form-control response-label" value="{{answer.answer}}" readonly>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% elif question.type == "sliderField" %}
+                    <div>
+                        <input type="range" id="question-{{parent}}-answer" name="question-{{parent}}-answer"
+                               class="custom-range" min="1" max="10">
+                    </div>
+                    <ul class="list-inline d-flex justify-content-between">
+                        <li class="list-inline-item">{{question.lower_label}}</li>
+                        <li class="list-inline-item">{{question.upper_label}}</li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if page != "preview" %}
+        <div class="row justify-content-center">
+            <button id="validateButton" type="button" class="btn btn-success btn-lg">Submit Response</button>
+        </div>
+        {% endif %}
+    </form>
+</main>
+{% endblock %}

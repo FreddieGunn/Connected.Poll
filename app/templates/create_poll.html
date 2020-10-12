@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% import 'bootstrap/form.html' as wtf %}
+
+{% set active_page = "create" %}
+
+{# ANY CHANGE TO THIS PAGE MUST CHANGE ID SETTINGS IN forms.js #}
+{% block scripts %}
+{{super()}}
+<script src="{{ url_for('static', filename='js/create_form.js') }}"></script>
+
+{% endblock %}
+
+{% block app_content %}
+<main role="main" class="mt-2">
+    <h1 class="display-4 mb-5 text-center">Create a new poll</h1>
+
+    <form id="question-form" action="" method="POST" role="form">
+        {{ form.hidden_tag() }}
+
+        <div id="errorModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Error</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body row mx-2">
+                        <div id="error-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id= "firstForm" class="">
+            <div class="form-group row justify-content-center text-right">
+                {{ form.title.label(class_="col-sm-1 col-form-label bold") }}
+                <div class="col-sm-6">
+                    {{ form.title(placeholder="Add a title for your poll", class_="form-control") }}<br>
+                </div>
+            </div>
+
+            <div class="form-group row justify-content-center text-right">
+                {{ form.description.label(class_="col-sm-1 col-form-label bold")}}
+                <div class="col-sm-6">
+                    {{ form.description(rows="4", cols = "64", placeholder="(Optional) Enter a description", class_="form-control") }}<br>
+                </div>
+            </div>
+
+            <div class="form-group row justify-content-center">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-6 mb-2">
+                    {{ form.public(class_="mr-3") }}
+                    {{ form.public.label(class="bold") }}
+                </div>
+            </div>
+            <div class="form-group row justify-content-center">
+                <div class="col-sm-1"></div>
+                    <a id="next" href="#" class="btn btn-dark btn-block col-sm-6">Next</a>
+            </div>
+        </div>
+
+
+        <div id = "nextForm" class="is-hidden">
+            <div id="btn-group" class="row justify-content-center mb-4 sticky-top">
+                <div class="col-lg-8 btn-group">
+                    <a id="back" class="btn btn-dark" href="#/">Back</a>
+                    <a id="add" class= "btn btn-dark" href="#/" data-toggle="modal" data-target="#questionModal">Add Question</a>
+                </div>
+            </div>
+            <div id="questionModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Available Question Types</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body row mx-2">
+                            <div class="question-type border-bottom">
+                                <h6>Radio Field</h6>
+                                <p>An unlimited amount of options can given but the user must select only one</p>
+                                <div class="text-center">
+                                    <a id="addRadio" class="btn btn-success mb-2" href="#">Add to Poll</a>
+                                </div>
+                            </div>
+                            <div class="mt-2 question-type border-bottom">
+                                <h6>Multiple Choice</h6>
+                                <p>An unlimited amount of options can be given with the user choosing as many of these as they like</p>
+                                <div class="text-center">
+                                    <a id="addCheck" class="btn btn-success mb-2" href="#">Add to Poll</a>
+                                </div>
+                            </div>
+                            <div class="mt-2 question-type border-bottom">
+                                <h6>Value Slider</h6>
+                                <p>Question is provided and user selected their response as a value on a slider</p>
+                                <div class="text-center">
+                                    <a id="addSlider" class="btn btn-success mb-2" href="#">Add to Poll</a>
+                                </div>
+                            </div>
+                            <div class="mt-2 question-type">
+                                <h6>Text Input</h6>
+                                <p>Provide a question for the user which can be responded to with a text input</p>
+                                <div class="text-center">
+                                    <a id="addText" class="btn btn-success mb-2" href="#">Add to Poll</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="confirmModal" class="modal fade" tabindex="-1" role="form" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Are you sure?</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Yes</button>
+                            <button type="button" class="btn btn-dark" data-dismiss="modal" aria-hidden="true">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="subforms-container" class="row justify-content-center mb-3">
+            </div>
+            <div class="row justify-content-center">
+                <button id="validateButton" type="button" class="btn btn-success btn-lg">Create Poll</button>
+            </div>
+        </div>
+    </form>
+
+    {% for error in form.title.errors %}
+        {{ error }}
+    {% endfor %}
+
+    {% for error in form.description.errors %}
+        {{ error }}
+    {% endfor %}
+
+        {# Form Template Question (Radio/Select) #}
+        <div id="question-_-form" class="is-hidden col-lg-8 card mx-2 mb-4 bg-light" data-index="_">
+            <input id="questionList-_-questionType" name="questionList-_-questionType" type="hidden" value="_">
+            <div class="my-2 input-group justify-content-between question-title-div">
+                <h6 class="question-type-label">Single-choice Question</h6>
+                <a class="remove fa fa-close text-right text-decoration-none" href="#/"></a>
+            </div>
+            <input id="questionList-_-questionTitle" name="questionList-_-questionTitle" type="text" value="" size="64" required class="bottom_border border-bottom bg-light" placeholder="Question Title"><br>
+            <p>Answers:</p>
+                <div id="question-_-form-0" data-index="_/0" class="border-bottom input-group">
+                    <input id="questionList-_-answerList-0-answer" name="questionList-_-answerList-0-answer" type="text" value="" placeholder="Option" required class="bg-light width-full">
+                    <a class="removeAnswer" href="#/">X</a><br>
+                </div>
+
+                <div id="question-_-form-1" data-index="_/1" class="border-bottom input-group">
+                    <input id="questionList-_-answerList-1-answer" name="questionList-_-answerList-1-answer" type="text" value="" placeholder="Option" required class="bg-light width-full">
+                    <a class="removeAnswer" href="#/">X</a><br>
+                </div>
+
+            <a class="addAnswer fa fa-plus mt-3 text-center text-success text-decoration-none mb-2" style="font-size:3vw" href="#/"></a>
+        </div>
+
+
+        {# Form Template Answer #}
+        <div id="question-_-form-_" class="is-hidden border-bottom input-group" data-index="_/_">
+            <input id="questionList-_-answerList-_-answer" name="questionList-_-answerList-_-answer" type="text" value="" placeholder="Option" required class="bg-light width-full">
+            <a class="removeAnswer" href="#/">X</a><br>
+        </div>
+
+        {# FORM Template Text Question#}
+        <div id="question-_-form-text" class="is-hidden col-lg-8 card mx-2 mb-4 bg-light" data-index="_">
+            <div class="my-2 input-group justify-content-between question-title-div">
+                <h6>Text Answered Question</h6>
+                <a class="remove fa fa-close text-right text-decoration-none" href="#/"></a>
+            </div>
+            <input id="questionList-__-questionType" name="questionList-_-questionType" type="hidden" value="textField">
+            <input id="questionList-__-questionTitle" name="questionList-_-questionTitle" type="text" value="" size="64" required class="bottom_border border-bottom bg-light" placeholder="Question Title"><br>
+        </div>
+
+        {# FORM Template Slider Question#}
+        <div id="question-_-form-slider" class="is-hidden col-lg-8 card mx-2 mb-4 bg-light" data-index="_">
+            <input id="questionList-___-questionType" name="questionList-_-questionType" type="hidden" value="sliderField">
+
+            <div class="my-2 input-group justify-content-between question-title-div">
+                <h6 class="question-type-label">Slider Question (1-10)</h6>
+                <a class="remove fa fa-close text-right text-decoration-none" href="#/"></a>
+            </div>
+            <input id="questionList-___-questionTitle" name="questionList-_-questionTitle" type="text" value="" size="64" required class="bottom_border border-bottom bg-light" placeholder="Question Title"><br>
+            <div id="question-___-form-0" data-index="_/0" class="border-bottom input-group">
+                <input id="questionList-___-answerList-0-answer" name="questionList-_-answerList-0-answer" type="text" value="" placeholder="Lower Value Label" class="bg-light width-full  label-input">
+            </div>
+            <div id="question-___-form-1" data-index="_/1" class="border-bottom input-group mb-4">
+                <input id="questionList-___-answerList-1-answer" name="questionList-_-answerList-1-answer" type="text" value="" placeholder="Upper Value Label" class="bg-light width-full  label-input">
+            </div>
+        </div>
+</main>
+{% endblock %}

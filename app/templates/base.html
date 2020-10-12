@@ -1,0 +1,82 @@
+<html lang="en">
+    <head>
+        {% block head %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+              integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }}" >
+        {% endblock %}
+
+        <title>Connected.Poll</title>
+        {% endblock %}
+    </head>
+    <body>
+        {% block content %}
+        <nav class="navbar navbar-expand-lg {{ 'sticky-top' if active_page != 'create'}} navbar-dark bg-dark">
+            <a class="navbar-brand col-md-2" href="{{url_for('home')}}">Connected.Poll</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
+                aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent-333">
+
+                <ul class="navbar-nav mr-auto">
+                    <li class="{{ 'active' if active_page == 'home' else 'nav-item' }}">
+                        <a class="nav-link" href="{{url_for('home')}}">Home</a>
+                    </li>
+                    <li class="{{ 'active' if active_page == 'search' else 'nav-item' }}">
+                        <a class="nav-link" href="{{url_for('search_polls')}}">Search Polls</a>
+                    </li>
+                    <li class="{{ 'active' if active_page == 'create' else 'nav-item' }}">
+                        <a class="nav-link" href="{{url_for('create_poll')}}">Create Poll</a>
+                    </li>
+                </ul>
+
+                <ul class = "navbar-nav ml-auto nav-flex-icons">
+                    <li class ="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-default"
+                        aria-labelledby="navbarDropdownMenuLink-333">
+                            {% if current_user.is_anonymous %}
+                            <a class="dropdown-item" href="{{url_for('login')}}">Login</a>
+                            <a class="dropdown-item" href="{{url_for('create_account')}}">Create Account</a>
+                            {% else %}
+                            <a class="dropdown-item" href="{{url_for('my_account')}}">My Account</a>
+                            <a class="dropdown-item" href="{{url_for('my_polls')}}">My Polls</a>
+                            <a class="dropdown-item" href="{{url_for('logout')}}">Logout</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="{{'container-fluid' if active_page != 'home'}}">
+            {% if flashInheritance == False %}
+            {% else %}
+                {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-info mt-3" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% endif %}
+            {% block app_content%}{% endblock %}
+        </div>
+        {% endblock %}
+
+        {% block scripts %}
+            {{bootstrap.load_js()}}
+        {% endblock %}
+
+    </body>
+</html>

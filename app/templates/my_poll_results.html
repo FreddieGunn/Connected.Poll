@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% set flashInheritance = False %}
+
+{% block scripts %}
+{{super()}}
+<script>
+    var response_rate_json = {{ response_rate|tojson }};
+    var question_responses_json = {{ question_responses|tojson }};
+</script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/results_page.js') }}"></script>
+{% endblock %}
+
+{% block app_content %}
+
+<div class="row">
+    <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky mt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a id="pollHomeLink" class="nav-link" href="#">Poll Home</a></li>
+                <li class="nav-item"><a id ="responseRateLink" class="nav-link" href="#">Response Rate</a></li>
+                <li class="nav-item"><a id="resultsLink" class="nav-link" href="#">Results</a></li>
+                <li class="nav-item"><a id="excelDownload" class="nav-link" href="{{url_for('excel_download', poll_id=poll.id)}}">Convert to Excel</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+
+        <div class="d-flex justify-content-between align-items-center border-bottom mb-3">
+            <h1>{{poll.title}}</h1>
+            <div class="btn-group mb-2 mb-md-0">
+                <div class="dropdown mr-5">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownPoll" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Edit Poll
+                    </button>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownPoll">
+
+                        {% if poll.online %}
+                        <a class="dropdown-item" href="{{url_for('close_poll',poll_id=poll.id)}}">Close Poll</a>
+                        {% else %}
+                        <a class="dropdown-item" href="{{url_for('open_poll',poll_id=poll.id)}}">Open Poll</a>
+                        {% endif %}
+
+                        {% if poll.public %}
+                        <a class="dropdown-item" href="{{url_for('private_poll', poll_id=poll.id)}}">Make Private</a>
+                        {% else %}
+                        <a class="dropdown-item" href="{{url_for('public_poll', poll_id=poll.id)}}">Make Public</a>
+                        {% endif %}
+
+                        <a class="dropdown-item" href="{{url_for('delete_poll',poll_id=poll.id)}}">Delete Poll</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+        <div class="pollHome page">
+            <p class="text-muted">{{poll.description}}</p>
+            <p>This poll contains: {{poll.questions.all()|length}} questions</p>
+            <p>This poll has received: {{poll.responses.all()|length}} responses</p>
+            {% include '_share_poll.html' %}
+
+        </div>
+
+        <div class="responseRate page is-hidden">
+            {% if response_rate == "" %}
+                <p>You have not yet received any responses</p>
+            {% else %}
+                <p>Your poll's response rate:</p>
+                <div id="chart_div"></div>
+                <div id="response_table_div"></div>
+            {% endif %}
+        </div>
+
+        <div class="results page is-hidden mb-4">
+            {% if response_rate == "" %}
+                <p>You have not yet received any responses</p>
+            {% else %}
+                {% for question in question_responses %}
+                    <div id="question-{{loop.index}}" align="center">
+                        {% if question[1] == "textField" %}
+                            <ul class="list-group w-75">
+                                <li class="list-group-item list-group-item-secondary">{{question[0]}}</li>
+                                {% for answer in question[2:] %}
+                                <li class="list-group-item">{{answer}}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div id="question_table-{{loop.index}}" align="center"></div>
+                    <div class="border-bottom my-4"></div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </main>
+</div>
+{% endblock %}

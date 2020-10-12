@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% set active_page = "home" %}
+{% block app_content %}
+<main>
+    <div class="jumbotron mb-5" style="height:100vh">
+        <h5 class="display-5 text-muted mt-5">Connected.Poll</h5>
+        <h1 class="display-3 mt-3">Create and Share free Surveys</h1>
+        <p class="lead">Create a survey in minutes with instant publication and receive live results straight to your account.</p>
+        <a class="btn btn-success mt-5" href="{{url_for('create_poll')}}">Get Started</a>
+    </div>
+    <div class="d-md-flex flex-md-equal w-100 my-md-3 pl-md-3">
+        <div class="mx-4">
+            <div class="mb-4">
+                <h5 class="display-5">Multiple question types</h5>
+                <p class="">Add different types of questions to your survey from multiple choice to text responses. Your survey, your way.</p>
+            </div>
+            <div class="mb-4">
+                <h5 class="display-5">Instant feedback</h5>
+                <p>Receive instant feedback straight to your account for every poll you create. Track daily responses and question answers.</p>
+            </div>
+            <div class="mb-4">
+                <h5 class="display-5">Convert to excel</h5>
+                <p>With the push of one button, your polls results are transferred straight to a formatted excel file. Great for businesses!</p>
+            </div>
+            <div>
+                <h5 class="display-5">Share online</h5>
+                <p>You decide. Make your poll available to anyone wanting to contribute or just to those you share it with.</p>
+            </div>
+        </div>
+        <div class="mt-4 mx-5">
+            <img src="{{url_for('static', filename='Home_image.png')}}" alt="Create a poll easily!" style="width:100%">
+        </div>
+    </div>
+
+    <nav class="navbar navbar-dark bg-dark navbar-expand-sm mt-5">
+        <a href="{{url_for('cv_download')}}" class="navbar-brand">Created by Freddie Gunn</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-334"
+                aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent-334">
+            <ul class="navbar-nav ml-auto">
+                <a class="nav-link mr-2" href="https://www.google.com" target="_blank">GitHub</a>
+                <a class="nav-link" href="https://www.linkedin.com/in/freddie-gunn/" target="_blank">LinkedIn</a>
+            </ul>
+        </div>
+    </nav>
+</main>
+{% endblock %}

@@ -1,0 +1,7 @@
+<h1>Dear {{ user.username }},</h1>
+<p>You have successfully created a poll</p><br>
+
+<p>{{poll.title}} is now ready for submissions, why not share it with the world <a href="{{url_for('poll_preview', poll_id=poll.id, _external=True)}}" >here! </a></p><br>
+
+<p>The Connected.Poll team</p>
+

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block app_content %}
+{% if polls %}
+<main role="main">
+    <div class="px-3 py-3 pt-md-4 pb-md-4 mx-auto text-center">
+        <h1 class="display-3">Your polls</h1>
+        <p class="lead">Listed below are all the polls you have created.
+            Clicking on each will open the poll where you can view it's responses, share it on social media platforms
+            or close the poll to future responses.</p>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Created on:</th>
+            <th scope="col">Type</th>
+            <th scope="col">Availability</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for poll in polls %}
+        <tr>
+            <th scope="row"><a href="{{url_for('my_polls_results', poll_id=poll.id)}}">{{poll.title}}</a> </th>
+            <td>{{poll.created_date.strftime('%Y-%m-%d')}}</td>
+
+            {% if poll.public == 0 %}
+            <td>Private</td>
+            {% else %}
+            <td>Public</td>
+            {% endif %}
+
+            {% if poll.online == 1 %}
+            <td>Votes open</td>
+            {% else %}
+            <td>Votes closed</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>
+{% else %}
+<h1>You have not yet created any polls.</h1>
+<p>Why not make one <a href="{{url_for('create_poll')}}">Here</a></p>
+{% endif %}
+
+{% endblock %}
+

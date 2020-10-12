@@ -1,0 +1,9 @@
+Dear {{ user.username }},
+
+You have successfully created a poll
+
+{{poll.title}} is now ready for submissions, why not share it with the world below:
+
+{{url_for('poll_preview',poll_id=poll.id, _external=True)}}
+
+The Connected.Poll team

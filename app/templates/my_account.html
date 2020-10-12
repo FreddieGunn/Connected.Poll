@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import 'bootstrap/form.html' as wtf %}
+
+{% block app_content %}
+<main role="main" class="text-center mt-4">
+    <h1>Hi {{ current_user.username }}</h1>
+
+    <a href= {{url_for('logout')}}>Logout</a>
+    <a href= {{url_for('change_password')}}>Change Password</a>
+    <a href= {{url_for('my_polls')}}>Your Polls</a>
+    <div class="row justify-content-center">
+       <div class="col-md-4">
+            <form class="form form-horizontal" method="post" role="form">
+                {{ form.hidden_tag() }}
+                {{ wtf.form_errors(form, hiddens="only") }}
+
+                {{ wtf.render_field(form.forename, readonly =true) }}
+                {{ wtf.render_field(form.surname, readonly=true) }}
+
+                {{ wtf.render_field(form.username) }}
+                {{ wtf.render_field(form.email) }}
+                {{ wtf.render_field(form.submit) }}
+
+            </form>
+       </div>
+    </div>
+</main>
+
+{% endblock %}

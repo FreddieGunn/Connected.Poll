@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% set page = "preview" %}
+
+{% block app_content %}
+<main role="main" class="text-center mt-4">
+    <p>{{poll.title}} is now live! Here is how it'll look
+    </p>
+    <div class="mt-3">
+        {% include "_share_poll.html" %}
+    </div>
+
+    {% include "view_poll.html" %}
+</main>
+{% endblock %}

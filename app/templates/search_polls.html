@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% set active_page = "search" %}
+{% block app_content %}
+<main role="main" class="text-center my-4 mx-5">
+    <h1 class="display-4 mb-5">Public polls</h1>
+    <div class="row justify-content-center">
+        {% for poll in polls %}
+        <div class="col-lg-4 card mx-2 mb-4" style="width: 36rem;">
+            <div class="card-body">
+                    <h4 class="card-title">{{poll.Poll.title}}</h4>
+                    <h6 class="card-subtitle text-muted mb-3">Created by: {{poll.username}}</h6>
+                    <p class="card-text">{{ poll.Poll.description }}</p>
+                    <p class="card-text">Created on: {{poll.Poll.created_date.strftime('%d-%m-%Y')}}</p>
+                    <a href="{{url_for('view_poll', poll_id = poll.Poll.id)}}" class="card-link mb-2">Submit Response</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}
