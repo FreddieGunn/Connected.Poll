@@ -1,0 +1,1 @@
+web: flask db upgrade; flask translate comple; gunicorn Connected.Poll:app
