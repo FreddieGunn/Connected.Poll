@@ -1,1 +1,1 @@
-web: flask db upgrade; gunicorn Connected.Poll:app
+web: gunicorn Connected.Poll:app
