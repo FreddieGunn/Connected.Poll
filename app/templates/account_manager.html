@@ -14,8 +14,8 @@
     </tr>
     {% for poll in user.polls %}
     <tr>
-        <td>poll.id</td>
-        <td>poll.title</td>
+        <td>{{poll.id}}</td>
+        <td>{{poll.title}}</td>
         {% if poll.public %}
         <td>Yes</td>
         {% else %}

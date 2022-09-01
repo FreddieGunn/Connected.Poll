@@ -45,7 +45,7 @@ def create_poll():
                     new_question.answers.append(new_answer)
 
         db.session.commit()
-        #poll_created_email(current_user, new_poll)
+        poll_created_email(current_user, new_poll)
         return redirect(url_for('poll_preview', poll_id=new_poll.id))
 
     return render_template('create_poll.html', form=form)
@@ -61,9 +61,11 @@ def my_polls():
 @app.route("/search_polls")
 def search_polls():
     if current_user.is_authenticated:
-        polls = db.session.query(Poll, User.username).join(User, (Poll.user_id == User.id)).filter(Poll.public == 1, Poll.online == 1, Poll.user_id != current_user.id).order_by(Poll.created_date.desc()).all()
+        polls = db.session.query(Poll, User.username).join(User, (Poll.user_id == User.id)).filter(Poll.public == 1,
+                            Poll.online == 1, Poll.user_id != current_user.id).order_by(Poll.created_date.desc()).all()
     else:
-        polls = db.session.query(Poll, User.username).join(User, (Poll.user_id == User.id)).filter(Poll.public == 1, Poll.online == 1).order_by(Poll.created_date.desc()).all()
+        polls = db.session.query(Poll, User.username).join(User, (Poll.user_id == User.id)).filter(Poll.public == 1,
+                                            Poll.online == 1).order_by(Poll.created_date.desc()).all()
 
     return render_template('search_polls.html', polls=polls)
 
@@ -111,7 +113,8 @@ def create_account():
         return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(forename=form.forename.data, surname=form.surname.data, username=form.username.data.lower(), email=form.email.data)
+        user = User(forename=form.forename.data, surname=form.surname.data, username=form.username.data.lower(),
+                    email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -206,7 +209,7 @@ def reset_password_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            #send_password_reset_email(user)
+            send_password_reset_email(user)
             print("Email sent here")
         flash('Check your email for instructions to reset your password')
         return redirect(url_for('login'))
@@ -225,7 +228,7 @@ def reset_password(token):
         user.set_password(form.new.data)
         db.session.commit()
         flash('Your password has been reset.')
-        # password_changed_email(user)
+        password_changed_email(user)
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
 
@@ -271,7 +274,8 @@ def delete_poll(poll_id):
     if current_user.id != 1:
         return redirect(url_for('my_polls'))
     else:
-        return redirect(url_for('account_manager',user_id =created_id))
+        return redirect(url_for('account_manager', user_id=created_id))
+
 
 @app.route("/close_poll/<poll_id>")
 @login_required
@@ -338,6 +342,7 @@ def excel_download(poll_id):
 @app.route("/cv")
 def cv_download():
     return send_file("static/FreddieGunnCV.docx", as_attachment=True, attachment_filename="FreddieGunnCV.docx")
+
 
 @app.route("/admin")
 @login_required
